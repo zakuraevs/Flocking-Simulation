@@ -15,3 +15,5 @@ In order to run the program, the user needs to have Java SE Development Kit 8 (h
 4. Follow the recommended settings
 
 The app can be launched by running the FlockSimulationApp.scala class inside the gui package as a Scala Application.
+
+![Image description](https://i.imgur.com/pk0Zno3.png)
