@@ -1,0 +1,7 @@
+speed: 5
+detectionRadius: 150
+centerPull: 0
+separationWeight: 5
+cohesionWeight: 4
+alignmentWeight: 6
+Vehicles: (100 200, 3 5); (400 500, -6 -8);
