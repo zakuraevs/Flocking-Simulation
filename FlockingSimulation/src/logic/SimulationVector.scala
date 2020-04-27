@@ -1,6 +1,5 @@
 package logic
 
-import simulation._
 import scala.math._
 
 //Represents a mathematical vector in 2D, witha  number of useful methods
@@ -20,7 +19,7 @@ class SimulationVector(private var x: Double, private var y: Double) {
   def magnitude: Double = sqrt(pow(this.xValue, 2) + pow(this.yValue, 2))
   
   
-  //Normalzies the vector, ie preserves the direction, but tscales magnitude to 1
+  //Normalzies the vector, ie preserves the direction, but scales magnitude to 1
   def normalize: SimulationVector = {
     if(this.magnitude != 0) {
       new SimulationVector(((this.xValue)/(this.magnitude)), ((this.yValue)/(this.magnitude)))
