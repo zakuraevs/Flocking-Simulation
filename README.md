@@ -5,7 +5,7 @@ This program is a Scala implementation of Craig Reynold's "Steering Behaviors Fo
 
 ![Flocking simulation](https://i.imgur.com/pk0Zno3.png)
 
-### Contetnts of the repository:
+### Contents of the repository:
 
 - FlockingSimulation: root directory
 - Project appendixes: Project documentationa nd I/O examples
