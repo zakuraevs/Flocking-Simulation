@@ -1,19 +1,34 @@
 # Flocking-Simulation
-2d simulation of autonomous vehicles. Written in Scala, launchable through Eclipse.
+A 2D simulation of flocking behavior that allowsusers to add autonomous characters & obstacles, resize the simulation and control parameters such as speed and gravitational pull in real time.
 
-Written by Sergey Zakuraev as a part of Aalto University Programming 2: Studio course 
+This program is a Scala implementation of Craig Reynold's "Steering Behaviors For Autonomous Characters" (Reynolds, 1997). 
 
-2d simulation where a user-selected number of vehicles (boids) move in a life-like flocking manner. 
-Each vehicle has a number of parameters such as a position in the 2d world and a velocity, 
-and each vehicle follows four rules to achieve realistic behavior. 
+![Flocking simulation](https://i.imgur.com/pk0Zno3.png)
 
-In order to run the program, the user needs to have Java SE Development Kit 8 (https://www.oracle.com/java/technologies/javase-jdk8-downloads.html) and Scala IDE for Eclipse (http://scala-ide.org/download/sdk.html) installed on their computer. The program can be imported into Eclipse as a git project:
+## How to run this program
 
-1. Copy the clone URL on GitHub
-2. File -> import -> Git -> Projects from Git -> next in Eclipse
+**Requirements:**
+
+- Java SE Development Kit 8 (JDK8) (https://www.oracle.com/java/technologies/javase-jdk8-downloads.html)  
+- Scala Eclipse IDE (http://scala-ide.org/download/sdk.html) 
+
+**Importing:**
+The program can be imported into Eclipse as a git project:
+
+1. Copy the GitHub URL (https://github.com/zakuraevs/Flocking-Simulation.git)
+2. In Eclipse, File -> import -> Git -> Projects from Git -> next in Eclipse
 3. Clone URI -> finish
 4. Follow the recommended settings
 
-The app can be launched by running the FlockSimulationApp.scala class inside the gui package as a Scala Application.
+**Running:**
+The app can be launched by running the FlockSimulationApp.scala class inside the gui package as a Scala Application. Just right-click in and select run.
 
-![Image description](https://i.imgur.com/pk0Zno3.png)
+## Features
+
+
+
+## Other
+
+
+
+## References
