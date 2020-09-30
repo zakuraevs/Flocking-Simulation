@@ -3,6 +3,8 @@ A 2D simulation of flocking behavior that allowsusers to add autonomous characte
 
 This program is a Scala implementation of Craig Reynold's "Steering Behaviors For Autonomous Characters" (Reynolds, 1997). 
 
+An SBT packege version of this project is WIP.
+
 ![Flocking simulation](https://i.imgur.com/pvNSIVA.gif)
 
 ### Contents of the repository:
