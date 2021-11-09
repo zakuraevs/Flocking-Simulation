@@ -1,12 +1,12 @@
 package gui
 
-import logic.Parameters.{height, width, vehicleLimit}
+import logic.Parameters.{height, vehicleLimit, width}
 import logic.SimulationWorld
 
 import scala.swing.{BoxPanel, Color, Dimension, MainFrame, MenuBar, Orientation, SimpleSwingApplication}
 import scala.collection.parallel.CollectionConverters._
-
 import java.awt.event.ActionListener
+import java.util.concurrent.Executors
 
 // The app itself:
 // Creates instances of SimulationWorld, SimulationPanel, MenuBar and ControlsPanel.
@@ -46,15 +46,21 @@ object FlockSimulationApp extends SimpleSwingApplication {
   // Making simWindow the main view of the app.
   def top: MainFrame = this.simWindow
 
-  // Thread for calculations.
-  // TODO figure this part out.
-  object CalcThread extends Thread {
-    override def run() = {
-      new javax.swing.Timer(10, new ActionListener {
+  // TODO put this into a separate file?
+  class VehicleTask(vehicle: logic.Vehicle) extends Runnable {
+    override def run() {
+      vehicle.updateVelocity()
+      vehicle.move()
+    }
+  }
+
+  val cores: Int = Runtime.getRuntime.availableProcessors
+  val pool: java.util.concurrent.ExecutorService = Executors.newFixedThreadPool(cores)
+
+  new javax.swing.Timer(10, new ActionListener {
         def actionPerformed(e: java.awt.event.ActionEvent) {
-          simWorld.vehicles.par.foreach(vehicle => {
-            vehicle.updateVelocity()
-            vehicle.move()
+          simWorld.vehicles.foreach(vehicle => {
+            pool.submit(new VehicleTask(vehicle))
           })
 
           controlsSuperPanel.numOfVehiclesLabel.text =
@@ -62,23 +68,7 @@ object FlockSimulationApp extends SimpleSwingApplication {
           width = simWindow.size.width
           height = simWindow.size.height
 
-        }
-      }).start
-    }
-  }
-
-  // Thread for drawing.
-  object DrawThread extends Thread {
-    override def run() = {
-      new javax.swing.Timer(10, new ActionListener {
-        def actionPerformed(e: java.awt.event.ActionEvent) {
           simPanel.repaint()
         }
-      }).start
-    }
-  }
-
-  // Starting the threads.
-  CalcThread.start()
-  DrawThread.start()
+   }).start
 }

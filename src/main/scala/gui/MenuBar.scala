@@ -223,7 +223,8 @@ object MenuBar {
     def thousand(): Unit = {
       FileMenu.reset()
 
-      for (i <- 0 to 999) {
+      // TODO remove the magic numbers!
+      for (i <- 0 to 1299) {
         simWorld.addVehicle(new Vehicle(Vehicle.randomPosition, Vehicle.randomVelocity, simWorld))
       }
     }
