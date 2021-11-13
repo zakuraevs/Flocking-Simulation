@@ -1,20 +1,20 @@
 package gui
 
-import logic.Parameters.{height, vehicleLimit, width}
+import util.Parameters.{height, vehicleLimit, width, refreshRate}
 import logic.SimulationWorld
 
-import scala.swing.{BoxPanel, Color, Dimension, MainFrame, MenuBar, Orientation, SimpleSwingApplication}
-import scala.collection.parallel.CollectionConverters._
+import scala.swing.{BoxPanel, Color, Dimension, MainFrame, Orientation, SimpleSwingApplication}
+
 import java.awt.event.ActionListener
 import java.util.concurrent.Executors
 
-// The app itself:
+// The app itself.
 // Creates instances of SimulationWorld, SimulationPanel, MenuBar and ControlsPanel.
-// Also creates and starts the execution threads.
+// Crates an executor thread pull and a timer feeding it with tasks.
 object FlockSimulationApp extends SimpleSwingApplication {
 
-  // MainFrame
-  val simWindow = new MainFrame {
+  // The topmost window
+  val simWindow: MainFrame = new MainFrame {
     // Basic parameters for the MainFrame.
     title = "Flocking Simualtion"
     resizable = true
@@ -27,26 +27,27 @@ object FlockSimulationApp extends SimpleSwingApplication {
   }
 
   // An instance of the SimulationWorld.
-  val simWorld = new SimulationWorld
+  val simWorld: SimulationWorld = new SimulationWorld
 
   // Main container. Every GUI element is inside it.
-  val view = new BoxPanel(Orientation.Vertical)
+  val view: BoxPanel = new BoxPanel(Orientation.Vertical)
 
   // Elements within the main container.
   // The simulation field:
-  val simPanel = new SimulationPanel(simWorld) {
+  val simPanel: SimulationPanel = new SimulationPanel(simWorld) {
     preferredSize = new Dimension(width, height + 200)
   }
   // The controls panel:
-  val controlsSuperPanel = new ControlsPanel(Orientation.Horizontal)
+  val controlsSuperPanel: ControlsPanel = new ControlsPanel(Orientation.Horizontal)
 
-  // Adding main container to MainFrame.
+  // Adding the main container to the MainFrame.
   simWindow.contents = view
 
   // Making simWindow the main view of the app.
   def top: MainFrame = this.simWindow
 
-  // TODO put this into a separate file?
+  // A class encapsulating a single task on a single vehicle.
+  // Instances of this class are used as arguments for the thread pool.
   class VehicleTask(vehicle: logic.Vehicle) extends Runnable {
     override def run() {
       vehicle.updateVelocity()
@@ -54,10 +55,13 @@ object FlockSimulationApp extends SimpleSwingApplication {
     }
   }
 
+  // Setting up the thread pool.
   val cores: Int = Runtime.getRuntime.availableProcessors
   val pool: java.util.concurrent.ExecutorService = Executors.newFixedThreadPool(cores)
 
-  new javax.swing.Timer(10, new ActionListener {
+  // Setting up a timer to repeatedly update the velocities and positions of all vehicles,
+  // and repainting the simulation panel.
+  new javax.swing.Timer(refreshRate, new ActionListener {
         def actionPerformed(e: java.awt.event.ActionEvent) {
           simWorld.vehicles.foreach(vehicle => {
             pool.submit(new VehicleTask(vehicle))

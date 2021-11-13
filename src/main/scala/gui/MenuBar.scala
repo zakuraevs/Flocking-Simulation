@@ -2,7 +2,7 @@ package gui
 
 import FlockSimulationApp.{simWorld, simPanel}
 
-import logic.Parameters._
+import util.Parameters._
 import logic.{Obstacle, SimulationVector, Vehicle}
 
 import scala.math.{cos, sin, toRadians}
@@ -13,10 +13,10 @@ import java.awt.{Color, Dimension}
 // The object responsible for the menu bar and its contents.
 object MenuBar {
 
-  // TODO parametrise all this?
   // An instance of a scala menu bar with contents.
   // Each submenu uses methods of internal objects inside this MenuBar object.
   val menu = new scala.swing.MenuBar {
+
     // File menu.
     contents += new scala.swing.Menu("File") {
       contents += new scala.swing.MenuItem(Action("Reset") {
@@ -196,7 +196,6 @@ object MenuBar {
     }
   }
 
-
   // The object that stores methods for the Presets menu.
   // Contains presets.
   object PresetsMenu {
@@ -223,8 +222,7 @@ object MenuBar {
     def thousand(): Unit = {
       FileMenu.reset()
 
-      // TODO remove the magic numbers!
-      for (i <- 0 to 1299) {
+      for (i <- 0 to 1000) {
         simWorld.addVehicle(new Vehicle(Vehicle.randomPosition, Vehicle.randomVelocity, simWorld))
       }
     }

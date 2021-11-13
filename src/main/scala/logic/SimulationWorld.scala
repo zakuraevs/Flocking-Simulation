@@ -1,19 +1,20 @@
 package logic
 
-import logic.Parameters._
+import util.Parameters._
 
 class SimulationWorld {
-  // Vehicles and obstacles on this panel.
+
+  // Vehicles and obstacles in the world.
   var vehicles = Array[Vehicle]()
   var obstacles = Array[Obstacle]()
   
-  // Number of vehicles on the panel.
+  // Number of vehicles in the world.
   def numOfVehicles: Int = this.vehicles.length
   
   // Adding & removing vehicles and obstacles.
   def addVehicle(v: Vehicle): Unit = {
-    if(this.numOfVehicles < vehicleLimit) {
-      if(v.position.xValue <= width && v.position.xValue >= 0 && v.position.yValue <= height && v.position.yValue >= 0) {
+    if (this.numOfVehicles < vehicleLimit) {
+      if (v.position.xValue <= width && v.position.xValue >= 0 && v.position.yValue <= height && v.position.yValue >= 0) {
         this.vehicles = this.vehicles :+ v
       } else {
         this.vehicles = this.vehicles :+ new Vehicle(Vehicle.randomPosition, v.velocity, this)
@@ -24,7 +25,7 @@ class SimulationWorld {
   def removeVehicles(): Unit = vehicles = Array[Vehicle]()
   
   def addObstacle(o: Obstacle): Unit = {
-    this.obstacles =  this.obstacles :+ o
+    this.obstacles = this.obstacles :+ o
   }
   
   def removeObstacles(): Unit = obstacles = Array[Obstacle]()

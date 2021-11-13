@@ -1,10 +1,10 @@
 package gui
 
-import FlockSimulationApp.{simWorld}
-
-import logic.Exceptions.InvalidLoadingException
-import logic.Parameters._
-import logic.{Exceptions, SimulationVector, Vehicle}
+import FlockSimulationApp.simWorld
+import util.Exceptions.InvalidLoadingException
+import util.Parameters._
+import logic.{SimulationVector, Vehicle}
+import util.Exceptions
 
 import scala.io.Source
 import scala.swing.FileChooser
@@ -19,7 +19,7 @@ object IO {
       val chooser = new FileChooser
       if (chooser.showOpenDialog(null) == FileChooser.Result.Approve) {
 
-        // Reading file line by line, splitting each line at spacebars.
+        // Reading the file line by line, splitting each line at spaces.
         // The result is data, which is an array[each line] of arrays[word in each line].
         val source = Source.fromFile(chooser.selectedFile)
         val lines = source.getLines()
@@ -27,11 +27,10 @@ object IO {
 
         source.close()
 
-        // TODO what is this?
+        // Calls the method to reset the simulation to the default state.
         gui.MenuBar.FileMenu.reset()
 
-        // TODO simplify.
-        // Changing constants values to loaded values (Ironical).
+        // Changing parameter values to loaded values.
         topSpeed = {
           if (data(0)(1).toInt < 1) {
             throw new InvalidLoadingException("Invalid speed inside file: ", data(0)(1).toString)
@@ -117,6 +116,7 @@ object IO {
   def saveFile(): Unit = {
 
     val chooser = new FileChooser
+
     if (chooser.showSaveDialog(null) == FileChooser.Result.Approve) {
 
       // Coordinates of vehicles in simulation put into arrays.

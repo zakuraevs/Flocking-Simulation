@@ -1,6 +1,6 @@
 package gui
 
-import logic.Parameters._
+import util.Parameters._
 import logic.SimulationWorld
 
 import java.awt._
@@ -14,7 +14,7 @@ class SimulationPanel(world: SimulationWorld) extends scala.swing.Panel {
   // Displaying vehicles and obstacles using Java's awt.
   override def paintComponent(g : Graphics2D): Unit = {
     
-    // Color of vehicles.
+    // Color of the vehicles.
     g.setColor(VehicleColor)
     
     // 2 Arrays that represent x and y coordinates of the 4 corners of the polygon model of each vehicle.

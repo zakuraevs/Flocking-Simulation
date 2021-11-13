@@ -1,8 +1,9 @@
 package logic
 
+import scala.collection.mutable.ArrayBuffer
 import scala.math._
 
-// Represents a mathematical vector in 2D, witha  number of useful methods.
+// Represents a mathematical vector in 2D, with a number of relevant methods.
 class SimulationVector(private var x: Double, private var y: Double) {
   
   // X and Y coordinates of the vector.
@@ -54,35 +55,34 @@ class SimulationVector(private var x: Double, private var y: Double) {
 
 }
 
-// TODO clarify.
-// Helper object with useful functionality.
+// A helper object with useful functionality.
 object SimulationVector {
   
   // Calculates the average position of 'tips' of several vectors.
-  def averagePosition(list: Array[SimulationVector]): SimulationVector = {
-    if(list.length < 1) {
+  def averagePosition(array: ArrayBuffer[SimulationVector]): SimulationVector = {
+    if(array.length < 1) {
       new SimulationVector(0, 0)
     } else {
-    
+
       var xSum = 0.0
       var ySum = 0.0
-    
-      for(i <- list) {
+
+      for(i <- array) {
         xSum = xSum + i.xValue
         ySum = ySum + i.yValue
       }
-      
-      var xAverage = xSum/list.length
-      var yAverage = ySum/list.length
+
+      var xAverage = xSum/array.length
+      var yAverage = ySum/array.length
       
       new SimulationVector(xAverage, yAverage)
     }  
   }
 
   // Sums up a number of vectos. Shortcut for + method.
-  def sumUp(sequence: Array[SimulationVector]): SimulationVector = {
+  def sumUp(array: ArrayBuffer[SimulationVector]): SimulationVector = {
     var sum = new SimulationVector(0,0)
-    for(i <- sequence) {
+    for(i <- array) {
       sum = sum + i
     }
     sum

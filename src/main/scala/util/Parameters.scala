@@ -1,11 +1,11 @@
-package logic
+package util
 
 import java.awt.Color
 
-//Object that stores values of various parameters affecting simulation and GUI
+// An object that stores values of various parameters affecting simulation and GUI.
 object Parameters {
 
-  //GUI paramters
+  // GUI paramters
   var width: Int = 1260
   var height: Int = 600
   var VehicleColor = Color.white
@@ -13,8 +13,27 @@ object Parameters {
   var controlsColor = Color.white
   var addingVehicles: Boolean = true
   var controlsHeight = 195
+  val refreshRate = 5
 
-  //Simulation parameters
+  // Sliders
+  val sliderParameters = Map[String, Tuple3[Int, Int, Int]](
+    "detectionSlider" -> (1, 400, detectionRadius),
+    "speedSlider" -> (1, 10, topSpeed),
+    "separationSlider" -> (1, 10, separationWeight),
+    "cohesionSlider" -> (1, 10, cohesionWeight),
+    "alignmentSlider" -> (1, 10, alignmentWeight),
+    "seeAheadSlider" -> (1, 200, seeAhead.toInt),
+    "avoidanceSlider" -> (1, 100, avoidanceWeight)
+  )
+
+  // Buttons
+  var gravityToggleOnText = "Gravity: on"
+  var gravityToggleOffText = "Gravity: off"
+  var clearVehiclesButtonText = "clear"
+  var obstacleVehicleButtonTextVehicles = "adding: vehicles"
+  var obstacleVehicleButtonTextObstacles = "adding: obstacles"
+
+  // Simulation parameters
   var topSpeed: Int = 3
   var detectionRadius: Int = 50
   var centerPull: Int = 1
@@ -24,12 +43,9 @@ object Parameters {
   var alignmentWeight: Int = 6
 
   var seeAhead: Double = 90
-  var avoidanceForce: Int = 85
+  var avoidanceWeight: Int = 85
 
-  // TODO set
-  val vehicleLimit: Int = 3000
-
-  //Text for help section
+  // Text for the help section
   val helpText =
     """
           \(•◡•)/
@@ -64,6 +80,8 @@ Additional features under development.
 
 - Sergey
 """
+
+  // Text for IO assistance
   val formatText =
     """
          ⚆ _ ⚆
@@ -104,6 +122,7 @@ And non-negative values for
 - alignmentWeight
 """
 
+  // Text for incorrect IO format
   val errorText =
     """
          (▀̿Ĺ̯▀̿ ̿)

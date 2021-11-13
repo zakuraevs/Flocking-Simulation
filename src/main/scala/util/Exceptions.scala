@@ -1,10 +1,9 @@
-package logic
+package util
 
-import Parameters.errorText
-
-import scala.swing.{BoxPanel, Orientation}
+import util.Parameters.errorText
 
 import java.awt.{Color, Dimension}
+import scala.swing.{BoxPanel, Orientation}
 
 object Exceptions {
 
