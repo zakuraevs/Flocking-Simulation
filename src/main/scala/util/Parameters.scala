@@ -8,12 +8,12 @@ object Parameters {
   // GUI paramters
   var width: Int = 1260
   var height: Int = 600
-  var VehicleColor = Color.white
-  var backgroundColor = Color.black
-  var controlsColor = Color.white
+  var VehicleColor: Color = Color.white
+  var backgroundColor: Color = Color.black
+  var controlsColor: Color = Color.white
   var addingVehicles: Boolean = true
-  var controlsHeight = 195
-  val refreshRate = 5
+  var controlsHeight: Int = 195
+  val refreshRate: Int = 10
 
   // Sliders
   val sliderParameters = Map[String, Tuple3[Int, Int, Int]](
@@ -23,7 +23,8 @@ object Parameters {
     "cohesionSlider" -> (1, 10, cohesionWeight),
     "alignmentSlider" -> (1, 10, alignmentWeight),
     "seeAheadSlider" -> (1, 200, seeAhead.toInt),
-    "avoidanceSlider" -> (1, 100, avoidanceWeight)
+    "avoidanceSlider" -> (1, 100, avoidanceWeight),
+    "ruleMultiplierSlider" -> (1, 10, (ruleMultiplier * 10).toInt)
   )
 
   // Buttons
@@ -34,16 +35,19 @@ object Parameters {
   var obstacleVehicleButtonTextObstacles = "adding: obstacles"
 
   // Simulation parameters
+  val vehicleLimit: Int = 1000
+  val obstacleRadiusMultiplier = 1.2
+
+  var ruleMultiplier: Double = 0.2
   var topSpeed: Int = 3
   var detectionRadius: Int = 50
   var centerPull: Int = 1
-
   var separationWeight: Int = 5
   var cohesionWeight: Int = 4
   var alignmentWeight: Int = 6
-
   var seeAhead: Double = 90
   var avoidanceWeight: Int = 85
+
 
   // Text for the help section
   val helpText =

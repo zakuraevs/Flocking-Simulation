@@ -6,24 +6,24 @@ import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
 // A Class that represents a single vehicle.
-class Vehicle(var position: SimulationVector, initialVelocity: SimulationVector, panel: SimulationWorld) {
-  
+class Vehicle(var position: SimulationVector, initialVelocity: SimulationVector, world: SimulationWorld) {
+
   // Veloctiy of the vehicle, i.e.m it's direction and speed.
   var velocity = initialVelocity
 
   // Collection of vehicle within a radius of this one, gets updated periodically.
   private var nearbyVehicles = ArrayBuffer[Vehicle]()
-   
+
   // Update the collection of nearby vehicles.
   private def updateNearbyVehicles(): Unit = {
-    for(vehicle <- this.panel.vehicles) {
+    for(vehicle <- this.world.vehicles) {
       if(this.position.distance(vehicle.position) < detectionRadius) {
         nearbyVehicles += vehicle
       }
     }
     nearbyVehicles = nearbyVehicles.filter( _ != this)
   }
-  
+
   // Moves the vehcile by adding its velocity to the position. Also handles crossing of simualtion's boundaries.
   def move() = {
     // Cross left bound.
@@ -50,20 +50,19 @@ class Vehicle(var position: SimulationVector, initialVelocity: SimulationVector,
       )
     }
   }
-  
+
   // Limits the top speed of a vehicle.
   private def limitSpeed: SimulationVector = this.velocity.normalize * topSpeed
-  
+
   // Calculates vector that repulses this vehicle from nearby ones.
   private def calculateSeparation: SimulationVector = {
     var repulsionVector = new SimulationVector(0,0)
     for(i <- nearbyVehicles) {
-      // TODO why normalize?
       repulsionVector += ((this.position - i.position).normalize)
     }
     repulsionVector.normalize
   }
-  
+
   // Calculates the vector that attracts this vehicle to the 'center of mass' of nearby ones.
   private def calculateCohesion: SimulationVector = {
     if(this.nearbyVehicles.size == 0) return new SimulationVector(0,0)
@@ -75,7 +74,7 @@ class Vehicle(var position: SimulationVector, initialVelocity: SimulationVector,
     var cohesionVector = centerOfMass - this.position
     cohesionVector.normalize
   }
-  
+
   // Calculates the vector of alignment with other vehicles.
   private def calculateAlignment: SimulationVector = {
     var velocities = ArrayBuffer[SimulationVector]()
@@ -85,34 +84,32 @@ class Vehicle(var position: SimulationVector, initialVelocity: SimulationVector,
     var averageVelocity = SimulationVector.averagePosition(velocities)
     averageVelocity.normalize
   }
-  
+
   // Calculates the vector that pulls the vehicle towards the center of simulation.
   // Arguably makes simulation more natural.
   private def vectorToCenter: SimulationVector = {
     val center = new SimulationVector(width/2,height/2)
     (center - this.position).normalize
   }
-  
-  // Calculates the vector that repulses this vehicle from obstacles.
-  private def calculateAvoidance: SimulationVector = {
-    val ahead = this.position + (this.velocity.normalize * seeAhead)
-    val aheadHalf = ahead * 0.5
 
-    // TODO fix
+  // Calculates the vector that repulses this vehicle from obstacles.
+  private def calculateObstacleAvoidance: SimulationVector = {
+    val ahead: SimulationVector = this.position + (this.velocity.normalize * seeAhead)
+    val aheadHalf: SimulationVector = ahead * 0.5
+
     def vectorIntersectsObstacle(obstacle: Obstacle): Boolean = {
-      ahead.distance(obstacle.position) <= obstacle.radius * 1.2 ||
-      aheadHalf.distance(obstacle.position) <= obstacle.radius * 1.2 ||
-      this.position.distance(obstacle.position) <= obstacle.radius * 1.2
+      ahead.distance(obstacle.position) <= obstacle.radius * obstacleRadiusMultiplier ||
+      aheadHalf.distance(obstacle.position) <= obstacle.radius * obstacleRadiusMultiplier ||
+      this.position.distance(obstacle.position) <= obstacle.radius * obstacleRadiusMultiplier
     }
 
-    // TODO fix
     def findMostThreatening: Option[Obstacle] = {
-      var collidableObstacles = this.panel.obstacles.filter( o => vectorIntersectsObstacle(o)).sortBy(o => this.position.distance(o.position))
+      var collidableObstacles = this.world.obstacles.filter(o => vectorIntersectsObstacle(o)).sortBy(o => this.position.distance(o.position))
       var mostThreatening = collidableObstacles.headOption
       mostThreatening
     }
     
-    val threat = findMostThreatening
+    val threat: Option[Obstacle] = findMostThreatening
     
     threat match {
       case Some(obstacle) => (ahead - obstacle.position).normalize  
@@ -121,14 +118,23 @@ class Vehicle(var position: SimulationVector, initialVelocity: SimulationVector,
     
   }
 
-  // TODO fix
   // Updates this vehicle's velocity combining the functions defined above. Updated every 10ms.
   def updateVelocity(): Unit = {
     this.nearbyVehicles = ArrayBuffer[Vehicle]()
     this.updateNearbyVehicles()
-    var actingVectors = ArrayBuffer[SimulationVector]((this.velocity),(this.calculateSeparation * (0.1*separationWeight)),
-        (this.calculateCohesion * (0.1*cohesionWeight)),(this.calculateAlignment * (0.1*alignmentWeight)), 
-        this.vectorToCenter * 0.1 * (centerPull), this.calculateAvoidance * (0.1* avoidanceWeight))
+
+    var actingVectors = ArrayBuffer[SimulationVector](
+      this.velocity,
+      this.calculateSeparation * ruleMultiplier * separationWeight,
+      this.calculateCohesion * ruleMultiplier * cohesionWeight,
+      this.calculateAlignment * ruleMultiplier * alignmentWeight,
+      this.vectorToCenter * ruleMultiplier * centerPull
+    )
+
+    if (!this.world.obstacles.isEmpty) {
+      actingVectors += this.calculateObstacleAvoidance * ruleMultiplier * avoidanceWeight
+    }
+
     this.velocity = SimulationVector.sumUp(actingVectors).normalize * topSpeed
   }
 }

@@ -13,93 +13,100 @@ class ControlsPanel(orientation: scala.swing.Orientation.Value) extends scala.sw
   minimumSize = new Dimension(width,controlsHeight)
   maximumSize = new Dimension(width,controlsHeight)
   
-  var obstacleControlsHidden = true
+  var obstacleControlsHidden: Boolean = true
   
   // Supercontainer for controls.
-  val verticalSuperPanel = new BoxPanel(Orientation.Vertical){
+  val verticalSuperPanel: BoxPanel = new BoxPanel(Orientation.Vertical){
     preferredSize  = new Dimension(width,150)
   }
   
   // Sliders to control the simulation.
-  val slidersPanel = new BoxPanel(Orientation.Horizontal) { 
+  val slidersPanel: BoxPanel = new BoxPanel(Orientation.Horizontal) {
     background = controlsColor
-    preferredSize  = new Dimension(width-50,60)
+    preferredSize = new Dimension(width-50,60)
   }
   
   // Labels to display parameter values.
-  val labelsPanel = new GridPanel(1,4) {
+  val labelsPanel: GridPanel = new GridPanel(1,4) {
     background = controlsColor
-    preferredSize  = new Dimension(width,60)
+    preferredSize = new Dimension(width,60)
   }
   
   // Buttons for actions.
-  val buttonsPanel = new GridPanel(2,2) {
+  val buttonsPanel: GridPanel = new GridPanel(2,2) {
     background = controlsColor
   }
   
   // Labels that display the values of parameters.
-  val numOfVehiclesLabel  = new scala.swing.Label { text = simWorld.numOfVehicles + " out of " + vehicleLimit }
-  val detectionLabel      = new scala.swing.Label { text = "Detection radius: " + detectionRadius.toString }
-  val speedLabel          = new scala.swing.Label { text = "Speed: " + topSpeed.toString }
-  val separationLabel     = new scala.swing.Label { text = "Separation: " + separationWeight.toString }
-  val cohesiobLabel       = new scala.swing.Label { text = "Cohesion: " + cohesionWeight.toString }
-  val alignmentLabel      = new scala.swing.Label { text = "Alignment: " + alignmentWeight.toString }
-  val seeAheadLabel       = new scala.swing.Label { text = "See-ahead: " + seeAhead.toString }
-  val avoidanceLabel      = new scala.swing.Label { text = "Avoidance: " + avoidanceWeight.toString }
+  val numOfVehiclesLabel: Label  = new scala.swing.Label { text = simWorld.numOfVehicles + " out of " + vehicleLimit }
+  val detectionLabel: Label      = new scala.swing.Label { text = "Detection radius: " + detectionRadius.toString }
+  val speedLabel: Label          = new scala.swing.Label { text = "Speed: " + topSpeed.toString }
+  val separationLabel: Label     = new scala.swing.Label { text = "Separation: " + separationWeight.toString }
+  val cohesiobLabel: Label       = new scala.swing.Label { text = "Cohesion: " + cohesionWeight.toString }
+  val alignmentLabel: Label      = new scala.swing.Label { text = "Alignment: " + alignmentWeight.toString }
+  val seeAheadLabel: Label       = new scala.swing.Label { text = "See-ahead: " + seeAhead.toString }
+  val avoidanceLabel: Label      = new scala.swing.Label { text = "Avoidance: " + avoidanceWeight.toString }
+  val ruleMultiplierLabel: Label = new scala.swing.Label { text = "Rule Multiplier: " + (ruleMultiplier * 10).toInt.toString }
 
   // Sliders that will go inside controlsPanel.
-  val detectionSlider = new Slider {
+  val detectionSlider: Slider = new Slider {
     min = sliderParameters("detectionSlider")._1
     max = sliderParameters("detectionSlider")._2
     value = detectionRadius
   }
   
-  val speedSlider = new Slider {
+  val speedSlider: Slider = new Slider {
     min = sliderParameters("speedSlider")._1
     max = sliderParameters("speedSlider")._2
     value = topSpeed
   }
   
-  val separationSlider = new Slider {
+  val separationSlider: Slider = new Slider {
     min = sliderParameters("separationSlider")._1
     max = sliderParameters("separationSlider")._2
     value = separationWeight
   }
   
-  val cohesionSlider = new Slider {
+  val cohesionSlider: Slider = new Slider {
     min = sliderParameters("cohesionSlider")._1
     max = sliderParameters("cohesionSlider")._2
     value = cohesionWeight
   }
   
-  val alignmentSlider = new Slider {
+  val alignmentSlider: Slider = new Slider {
     min = sliderParameters("alignmentSlider")._1
     max = sliderParameters("alignmentSlider")._2
     value = alignmentWeight
   }
   
-  val seeAheadSlider = new Slider {
+  val seeAheadSlider: Slider = new Slider {
     min = sliderParameters("seeAheadSlider")._1
     max = sliderParameters("seeAheadSlider")._2
     value = seeAhead.toInt
   }
   
-  val avoidanceSlider = new Slider {
+  val avoidanceSlider: Slider = new Slider {
     min = sliderParameters("avoidanceSlider")._1
     max = sliderParameters("avoidanceSlider")._2
     value = avoidanceWeight
   }
+
+  val ruleMultiplierSlider: Slider = new Slider {
+    min = sliderParameters("ruleMultiplierSlider")._1
+    max = sliderParameters("ruleMultiplierSlider")._2
+    value = (ruleMultiplier * 10).toInt
+  }
   
   // Buttons that go inside buttonsPanel.
-  val gravityToggle = new scala.swing.Button {
+  val gravityToggle: Button = new scala.swing.Button {
     text = gravityToggleOnText
   }
   
-  val clearVehiclesButton = new scala.swing.Button {
+  val clearVehiclesButton: Button = new scala.swing.Button {
     text = clearVehiclesButtonText
   }
   
-  val obstacleVehicleButton = new scala.swing.Button {
+  val obstacleVehicleButton: Button = new scala.swing.Button {
     text = obstacleVehicleButtonTextVehicles
   }
   
@@ -111,6 +118,7 @@ class ControlsPanel(orientation: scala.swing.Orientation.Value) extends scala.sw
   FlockSimulationApp.listenTo(alignmentSlider)
   FlockSimulationApp.listenTo(seeAheadSlider)
   FlockSimulationApp.listenTo(avoidanceSlider)
+  FlockSimulationApp.listenTo(ruleMultiplierSlider)
   FlockSimulationApp.listenTo(simPanel.mouse.clicks)
   FlockSimulationApp.listenTo(gravityToggle)
   FlockSimulationApp.listenTo(clearVehiclesButton)
@@ -123,36 +131,48 @@ class ControlsPanel(orientation: scala.swing.Orientation.Value) extends scala.sw
       detectionRadius = detectionSlider.value
       detectionLabel.text = "Detection radius: " + detectionSlider.value
     }
+
     case ValueChanged(`speedSlider`) => {
       topSpeed = speedSlider.value
       speedLabel.text = "Speed: " + speedSlider.value
     }
+
     case ValueChanged(`separationSlider`) => {
       val v = separationSlider.value 
       separationWeight = v
       separationLabel.text = "Separation: " + separationSlider.value
     }
+
     case ValueChanged(`cohesionSlider`) => {
       val v = cohesionSlider.value 
       cohesionWeight = v
       cohesiobLabel.text = "Cohesion: " + cohesionSlider.value
     }
+
     case ValueChanged(`alignmentSlider`) => {
       val v = alignmentSlider.value 
       alignmentWeight = v
       alignmentLabel.text = "Alignment: " + alignmentSlider.value
     }
+
     case ValueChanged(`seeAheadSlider`) => {
       val v = seeAheadSlider.value 
       seeAhead = v
       seeAheadLabel.text = "See-ahead: " + seeAheadSlider.value
     }
+
     case ValueChanged(`avoidanceSlider`) => {
       val v = avoidanceSlider.value
       avoidanceWeight = v
       avoidanceLabel.text = "Avoidance: " + avoidanceSlider.value
     }
-    
+
+     case ValueChanged(`ruleMultiplierSlider`) => {
+      val v = ruleMultiplierSlider.value
+      ruleMultiplier = v.toDouble / 10D
+      ruleMultiplierLabel.text = "Rule Multiplier: " + ruleMultiplierSlider.value
+    }
+
     case clickEvent: MousePressed => {
       // Making sure vehicles can only be added inside the simulation panel.
       if(clickEvent.point.x <= width && clickEvent.point.x >= 0 && clickEvent.point.y <= height && clickEvent.point.y >= 0 ) {
@@ -202,12 +222,14 @@ class ControlsPanel(orientation: scala.swing.Orientation.Value) extends scala.sw
   slidersPanel.contents += separationSlider
   slidersPanel.contents += cohesionSlider
   slidersPanel.contents += alignmentSlider
+  slidersPanel.contents += ruleMultiplierSlider
   
   labelsPanel.contents += detectionLabel
   labelsPanel.contents += speedLabel
   labelsPanel.contents += separationLabel
   labelsPanel.contents += cohesiobLabel
   labelsPanel.contents += alignmentLabel
+  labelsPanel.contents += ruleMultiplierLabel
 
   FlockSimulationApp.view.contents += simPanel
   FlockSimulationApp.view.contents += this

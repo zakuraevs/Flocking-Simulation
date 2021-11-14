@@ -94,7 +94,7 @@ object IO {
         FlockSimulationApp.controlsSuperPanel.cohesionSlider.value = cohesionWeight.toInt
         FlockSimulationApp.controlsSuperPanel.alignmentSlider.value = alignmentWeight.toInt
 
-        for (i <- 0 to vehicleCoords.size - 1) {
+        for (i <- vehicleCoords.indices) {
           simWorld.addVehicle(new Vehicle(new SimulationVector(vehicleCoords(i)(0), vehicleCoords(i)(1)), new SimulationVector(vehicleVelocities(i)(0), vehicleVelocities(i)(1)), simWorld))
         }
       }
