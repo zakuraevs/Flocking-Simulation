@@ -13,6 +13,9 @@ import java.util.concurrent.Executors
 // Crates an executor thread pull and a timer feeding it with tasks.
 object FlockSimulationApp extends SimpleSwingApplication {
 
+  // An instance of the SimulationWorld.
+  val simWorld: SimulationWorld = new SimulationWorld
+
   // The topmost window
   val simWindow: MainFrame = new MainFrame {
     // Basic parameters for the MainFrame.
@@ -25,9 +28,6 @@ object FlockSimulationApp extends SimpleSwingApplication {
     // Menu bar on top of the simulation.
     menuBar = gui.MenuBar.menu
   }
-
-  // An instance of the SimulationWorld.
-  val simWorld: SimulationWorld = new SimulationWorld
 
   // Main container. Every GUI element is inside it.
   val view: BoxPanel = new BoxPanel(Orientation.Vertical)

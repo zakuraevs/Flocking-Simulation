@@ -12,10 +12,12 @@ import scala.swing.FileChooser
 
 // The object responsible for handling laoding and saving of files.
 object IO {
+
   // Loading a simulation state from a .txt file.
   def loadFile(): Unit = {
 
     try {
+
       // File chooser in a new window to select file to be loaded.
       val chooser: FileChooser = new FileChooser
       if (chooser.showOpenDialog(null) == FileChooser.Result.Approve) {

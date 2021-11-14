@@ -6,10 +6,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
 // A Class that represents a single vehicle.
-class Vehicle(var position: SimulationVector, initialVelocity: SimulationVector, world: SimulationWorld) {
-
-  // Veloctiy of the vehicle, i.e.m it's direction and speed.
-  var velocity: SimulationVector = initialVelocity
+class Vehicle(var position: SimulationVector, var velocity: SimulationVector, world: SimulationWorld) {
 
   // Collection of vehicle within a radius of this one, gets updated periodically.
   private var nearbyVehicles: ArrayBuffer[Vehicle] = ArrayBuffer[Vehicle]()

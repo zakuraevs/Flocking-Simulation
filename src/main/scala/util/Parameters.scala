@@ -6,7 +6,7 @@ import java.awt.Color
 object Parameters {
 
   // GUI paramters
-  var width: Int = 1260
+  var width: Int = 1600
   var height: Int = 600
   var VehicleColor: Color = Color.white
   var backgroundColor: Color = Color.black
