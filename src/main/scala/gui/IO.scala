@@ -6,7 +6,8 @@ import util.Parameters._
 import logic.{SimulationVector, Vehicle}
 import util.Exceptions
 
-import scala.io.Source
+import java.io.PrintWriter
+import scala.io.{BufferedSource, Source}
 import scala.swing.FileChooser
 
 // The object responsible for handling laoding and saving of files.
@@ -16,14 +17,14 @@ object IO {
 
     try {
       // File chooser in a new window to select file to be loaded.
-      val chooser = new FileChooser
+      val chooser: FileChooser = new FileChooser
       if (chooser.showOpenDialog(null) == FileChooser.Result.Approve) {
 
         // Reading the file line by line, splitting each line at spaces.
         // The result is data, which is an array[each line] of arrays[word in each line].
-        val source = Source.fromFile(chooser.selectedFile)
-        val lines = source.getLines()
-        val data = lines.map(line => line.split(" ")).toArray
+        val source: BufferedSource = Source.fromFile(chooser.selectedFile)
+        val lines: Iterator[String] = source.getLines()
+        val data: Array[Array[String]] = lines.map(line => line.split(" ")).toArray
 
         source.close()
 
@@ -69,10 +70,10 @@ object IO {
         }
 
         // Creating Array of pairs, each pair containing x and y coords for a loaded vehicle.
-        val vehicleData = data(6).tail.map(_.filterNot(Set(',', ';', '(', ')')(_))).map(_.toDouble)
-        val vehicleDataGrouped = vehicleData.grouped(2).toArray
-        val vehicleCoords = vehicleDataGrouped.zipWithIndex.filter(_._2 % 2 == 0).map(_._1)
-        val vehicleVelocities = vehicleDataGrouped.zipWithIndex.filter(_._2 % 2 != 0).map(_._1)
+        val vehicleData: Array[Double] = data(6).tail.map(_.filterNot(Set(',', ';', '(', ')')(_))).map(_.toDouble)
+        val vehicleDataGrouped: Array[Array[Double]] = vehicleData.grouped(2).toArray
+        val vehicleCoords: Array[Array[Double]] = vehicleDataGrouped.zipWithIndex.filter(_._2 % 2 == 0).map(_._1)
+        val vehicleVelocities: Array[Array[Double]] = vehicleDataGrouped.zipWithIndex.filter(_._2 % 2 != 0).map(_._1)
 
         // Changing labels to loaded values.
         FlockSimulationApp.controlsSuperPanel.detectionLabel.text = "Detection radius: " + detectionRadius
@@ -120,17 +121,17 @@ object IO {
     if (chooser.showSaveDialog(null) == FileChooser.Result.Approve) {
 
       // Coordinates of vehicles in simulation put into arrays.
-      val vehicleXes = simWorld.vehicles.map(_.position.xValue).toArray
-      val vehicleYs = simWorld.vehicles.map(_.position.yValue).toArray
-      val zippedCoords = vehicleXes.zip(vehicleYs)
+      val vehicleXes: Array[Double] = simWorld.vehicles.map(_.position.xValue).toArray
+      val vehicleYs: Array[Double] = simWorld.vehicles.map(_.position.yValue).toArray
+      val zippedCoords: Array[(Double, Double)] = vehicleXes.zip(vehicleYs)
 
-      val vehicleVelocityXes = simWorld.vehicles.map(_.velocity.xValue).toArray
-      val vehicleVelocityYss = simWorld.vehicles.map(_.velocity.yValue).toArray
-      val zippedVelocities = vehicleVelocityXes.zip(vehicleVelocityYss)
+      val vehicleVelocityXes: Array[Double] = simWorld.vehicles.map(_.velocity.xValue).toArray
+      val vehicleVelocityYs: Array[Double] = simWorld.vehicles.map(_.velocity.yValue).toArray
+      val zippedVelocities: Array[(Double, Double)] = vehicleVelocityXes.zip(vehicleVelocityYs)
 
       // Turning these into a string.
-      var vehicleCoordsStr = ""
-      for (i <- 0 to zippedCoords.size - 1) {
+      var vehicleCoordsStr: String = ""
+      for (i <- zippedCoords.indices) {
         vehicleCoordsStr = vehicleCoordsStr + "(" + zippedCoords(i)._1
         vehicleCoordsStr = vehicleCoordsStr + " "
         vehicleCoordsStr = vehicleCoordsStr + zippedCoords(i)._2
@@ -142,7 +143,7 @@ object IO {
       }
 
       // Making the whole text of the file to be saved.
-      val text = ("speed: " + topSpeed + "\n"
+      val text: String = ("speed: " + topSpeed + "\n"
         + "detectionRadius: " + detectionRadius + "\n"
         + "centerPull: " + centerPull + "\n"
         + "separationWeight: " + separationWeight.toInt + "\n"
@@ -151,7 +152,7 @@ object IO {
         + "Vehicles: " + vehicleCoordsStr)
 
       // Writing text to the file.
-      val pw = new java.io.PrintWriter(chooser.selectedFile)
+      val pw: PrintWriter = new java.io.PrintWriter(chooser.selectedFile)
       pw.print(text)
       pw.close()
     }

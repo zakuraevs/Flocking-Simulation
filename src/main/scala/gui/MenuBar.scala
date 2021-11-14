@@ -1,13 +1,11 @@
 package gui
 
-import FlockSimulationApp.{simWorld, simPanel}
-
+import FlockSimulationApp.{simPanel, simWorld}
 import util.Parameters._
 import logic.{Obstacle, SimulationVector, Vehicle}
 
 import scala.math.{cos, sin, toRadians}
-import scala.swing.{Action, BoxPanel, Color, Orientation, Separator}
-
+import scala.swing.{Action, BoxPanel, Color, Orientation, Separator, TextArea}
 import java.awt.{Color, Dimension}
 
 // The object responsible for the menu bar and its contents.
@@ -15,7 +13,7 @@ object MenuBar {
 
   // An instance of a scala menu bar with contents.
   // Each submenu uses methods of internal objects inside this MenuBar object.
-  val menu = new scala.swing.MenuBar {
+  val menu: scala.swing.MenuBar = new scala.swing.MenuBar {
 
     // File menu.
     contents += new scala.swing.Menu("File") {
@@ -63,8 +61,8 @@ object MenuBar {
       contents += new scala.swing.MenuItem(Action("Hundred Random") {
         PresetsMenu.hundred()
       })
-      contents += new scala.swing.MenuItem(Action("One Thousand Random") {
-        PresetsMenu.thousand()
+      contents += new scala.swing.MenuItem(Action("Limit") {
+        PresetsMenu.limit()
       })
       contents += new scala.swing.MenuItem(Action("Wall on Wall") {
         PresetsMenu.wallOnWall()
@@ -162,15 +160,15 @@ object MenuBar {
     // Creates a new window with use instructions.
     // Does not stop the simulations.
     def howToUse() = {
-      val helpWindow = new scala.swing.Frame() {
+      val helpWindow: scala.swing.Frame = new scala.swing.Frame() {
         resizable = false
         background = new Color(0, 0, 0)
         minimumSize = new Dimension(200, 400)
 
-        val text = new scala.swing.TextArea {
+        val text: TextArea = new scala.swing.TextArea {
           text = helpText
         }
-        val container = new BoxPanel(Orientation.Vertical)
+        val container: BoxPanel = new BoxPanel(Orientation.Vertical)
         container.contents += text
         contents = container
       }
@@ -180,15 +178,15 @@ object MenuBar {
     // Creates a new window with I/O instructions.
     // Does not stop the simulations.
     def loadingFormat() = {
-      val formatWindow = new scala.swing.Frame() {
+      val formatWindow: scala.swing.Frame = new scala.swing.Frame() {
         resizable = false
         background = new Color(0, 0, 0)
         minimumSize = new Dimension(200, 400)
 
-        val text = new scala.swing.TextArea {
+        val text: TextArea = new scala.swing.TextArea {
           text = formatText
         }
-        val container = new BoxPanel(Orientation.Vertical)
+        val container: BoxPanel = new BoxPanel(Orientation.Vertical)
         container.contents += text
         contents = container
       }
@@ -219,10 +217,10 @@ object MenuBar {
     }
 
     // Preset that creates 1000 vehicles in random positions.
-    def thousand(): Unit = {
+    def limit(): Unit = {
       FileMenu.reset()
 
-      for (i <- 0 to 1000) {
+      for (i <- 0 to vehicleLimit) {
         simWorld.addVehicle(new Vehicle(Vehicle.randomPosition, Vehicle.randomVelocity, simWorld))
       }
     }

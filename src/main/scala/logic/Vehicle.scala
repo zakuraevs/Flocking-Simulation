@@ -9,10 +9,10 @@ import scala.util.Random
 class Vehicle(var position: SimulationVector, initialVelocity: SimulationVector, world: SimulationWorld) {
 
   // Veloctiy of the vehicle, i.e.m it's direction and speed.
-  var velocity = initialVelocity
+  var velocity: SimulationVector = initialVelocity
 
   // Collection of vehicle within a radius of this one, gets updated periodically.
-  private var nearbyVehicles = ArrayBuffer[Vehicle]()
+  private var nearbyVehicles: ArrayBuffer[Vehicle] = ArrayBuffer[Vehicle]()
 
   // Update the collection of nearby vehicles.
   private def updateNearbyVehicles(): Unit = {
@@ -56,39 +56,48 @@ class Vehicle(var position: SimulationVector, initialVelocity: SimulationVector,
 
   // Calculates vector that repulses this vehicle from nearby ones.
   private def calculateSeparation: SimulationVector = {
-    var repulsionVector = new SimulationVector(0,0)
+
+    var repulsionVector: SimulationVector = new SimulationVector(0,0)
     for(i <- nearbyVehicles) {
       repulsionVector += ((this.position - i.position).normalize)
     }
+
     repulsionVector.normalize
   }
 
   // Calculates the vector that attracts this vehicle to the 'center of mass' of nearby ones.
   private def calculateCohesion: SimulationVector = {
-    if(this.nearbyVehicles.size == 0) return new SimulationVector(0,0)
-    var positions = ArrayBuffer[SimulationVector]()
+
+    if (this.nearbyVehicles.size == 0) {
+      return new SimulationVector(0,0)
+    }
+
+    val positions: ArrayBuffer[SimulationVector] = ArrayBuffer[SimulationVector]()
     for(i <- this.nearbyVehicles) {
       positions += i.position
     }
-    var centerOfMass = SimulationVector.averagePosition(positions)
-    var cohesionVector = centerOfMass - this.position
+    val centerOfMass: SimulationVector = SimulationVector.averagePosition(positions)
+    val cohesionVector: SimulationVector = centerOfMass - this.position
+
     cohesionVector.normalize
   }
 
   // Calculates the vector of alignment with other vehicles.
   private def calculateAlignment: SimulationVector = {
-    var velocities = ArrayBuffer[SimulationVector]()
+
+    val velocities: ArrayBuffer[SimulationVector] = ArrayBuffer[SimulationVector]()
     for(i <- nearbyVehicles) {
       velocities += i.velocity
     }
-    var averageVelocity = SimulationVector.averagePosition(velocities)
+    val averageVelocity: SimulationVector = SimulationVector.averagePosition(velocities)
+
     averageVelocity.normalize
   }
 
   // Calculates the vector that pulls the vehicle towards the center of simulation.
   // Arguably makes simulation more natural.
   private def vectorToCenter: SimulationVector = {
-    val center = new SimulationVector(width/2,height/2)
+    val center: SimulationVector = new SimulationVector( width / 2, height / 2)
     (center - this.position).normalize
   }
 
@@ -115,15 +124,15 @@ class Vehicle(var position: SimulationVector, initialVelocity: SimulationVector,
       case Some(obstacle) => (ahead - obstacle.position).normalize  
       case None => new SimulationVector(0, 0)
     }
-    
   }
 
   // Updates this vehicle's velocity combining the functions defined above. Updated every 10ms.
   def updateVelocity(): Unit = {
+
     this.nearbyVehicles = ArrayBuffer[Vehicle]()
     this.updateNearbyVehicles()
 
-    var actingVectors = ArrayBuffer[SimulationVector](
+    val actingVectors: ArrayBuffer[SimulationVector] = ArrayBuffer[SimulationVector](
       this.velocity,
       this.calculateSeparation * ruleMultiplier * separationWeight,
       this.calculateCohesion * ruleMultiplier * cohesionWeight,
@@ -141,9 +150,12 @@ class Vehicle(var position: SimulationVector, initialVelocity: SimulationVector,
 
 // Helper object for creating random positions and velocities for new vehicles.
 object Vehicle {
-  private val r = Random
+  private val r: Random.type = Random
   
-  def randomVelocity: SimulationVector = new SimulationVector(scala.math.cos(r.nextInt(360).toRadians), scala.math.sin(r.nextInt(360).toRadians))
+  def randomVelocity: SimulationVector = new SimulationVector(
+    scala.math.cos(r.nextInt(360).toRadians),
+    scala.math.sin(r.nextInt(360).toRadians)
+  )
   
   def randomPosition: SimulationVector = new SimulationVector(r.nextInt(width), r.nextInt(height))
   

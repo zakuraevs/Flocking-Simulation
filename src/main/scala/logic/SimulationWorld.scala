@@ -5,8 +5,8 @@ import util.Parameters._
 class SimulationWorld {
 
   // Vehicles and obstacles in the world.
-  var vehicles = Array[Vehicle]()
-  var obstacles = Array[Obstacle]()
+  var vehicles: Array[Vehicle] = Array[Vehicle]()
+  var obstacles: Array[Obstacle] = Array[Obstacle]()
   
   // Number of vehicles in the world.
   def numOfVehicles: Int = this.vehicles.length

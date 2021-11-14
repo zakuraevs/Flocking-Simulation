@@ -14,6 +14,9 @@ object Parameters {
   var addingVehicles: Boolean = true
   var controlsHeight: Int = 195
   val refreshRate: Int = 10
+  val vehiclePolygonFrontOffset: Int = 18
+  val vehiclePolygonBackOffset: Int = 4
+  val vehiclePolygonSideOffset: Int = 7
 
   // Sliders
   val sliderParameters = Map[String, Tuple3[Int, Int, Int]](

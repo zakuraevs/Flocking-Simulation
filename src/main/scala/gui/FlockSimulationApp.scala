@@ -67,8 +67,7 @@ object FlockSimulationApp extends SimpleSwingApplication {
             pool.submit(new VehicleTask(vehicle))
           })
 
-          controlsSuperPanel.numOfVehiclesLabel.text =
-            simWorld.vehicles.size + " out of " + vehicleLimit
+          controlsSuperPanel.numOfVehiclesLabel.text = simWorld.vehicles.size + " out of " + vehicleLimit
           width = simWindow.size.width
           height = simWindow.size.height
 

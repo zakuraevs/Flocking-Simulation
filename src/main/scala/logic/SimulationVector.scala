@@ -64,16 +64,16 @@ object SimulationVector {
       new SimulationVector(0, 0)
     } else {
 
-      var xSum = 0.0
-      var ySum = 0.0
+      var xSum: Double = 0.0
+      var ySum: Double = 0.0
 
       for(i <- array) {
         xSum = xSum + i.xValue
         ySum = ySum + i.yValue
       }
 
-      var xAverage = xSum/array.length
-      var yAverage = ySum/array.length
+      var xAverage: Double = xSum / array.length
+      var yAverage: Double = ySum / array.length
       
       new SimulationVector(xAverage, yAverage)
     }  
@@ -81,7 +81,7 @@ object SimulationVector {
 
   // Sums up a number of vectos. Shortcut for + method.
   def sumUp(array: ArrayBuffer[SimulationVector]): SimulationVector = {
-    var sum = new SimulationVector(0,0)
+    var sum: SimulationVector = new SimulationVector(0,0)
     for(i <- array) {
       sum = sum + i
     }
